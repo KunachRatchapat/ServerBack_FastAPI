@@ -1,8 +1,22 @@
-from typing import Optional
-from sqlmodel import Field, SQLModel
+from typing import Optional , List
+from sqlmodel import Field, SQLModel , Relationship
 from datetime import datetime 
-
-#Table User
+ 
+    #---Table Favorite---
+class Favorite (SQLModel , table = True):
+    id : int = Field(default = None , primary_key = True)
+    users_id :int = Field(foreign_key="user.id") #relation with Users
+    vegetable_id : int = Field(foreign_key="vegetable.id") #relation with Vegetable
+    createat : datetime = Field(default_factory=datetime.now)
+    deleteat : datetime = Field(default_factory=datetime.now)
+    updateat : datetime = Field(default_factory=datetime.now)
+    
+    #--Relation 1 to M
+    user : Optional["Users"] = Relationship(back_populates="favorites")
+    vegetable : Optional["Vegetable"] = Relationship(back_populates="favorites")
+    
+    
+    #---Table User---
 class Users (SQLModel , table = True):
     id : Optional[int] = Field(default =None, primary_key=True)
     email : str = Field()
@@ -13,32 +27,25 @@ class Users (SQLModel , table = True):
     createat : datetime = Field(default_factory=datetime.now)
     deleteat : datetime = Field(default_factory=datetime.now)
     updateat : datetime = Field(default_factory=datetime.now)
-    vegetable_id : int = Field(foreign_key="vegetable.id")  #relation with Vegetable
-    favorite_id : int = Field(foreign_key="favorite.id")    #relation with Favorite
+    
+    #Relationship 1 to M
+    favorites: List[Favorite] = Relationship(back_populates="user")
     
     
-    
-#Table Vegetable
+    #---Table Vegetable---
 class Vegetable (SQLModel , table=True):
     id : Optional[int] = Field(default= None, primary_key=True)
     name : str = Field(index = True)
     description : str = Field()
-    picture : str =  Field(index = True)
+    picture : str =  Field()
     createat : datetime = Field(default_factory=datetime.now)
     deleteat: datetime = Field(default_factory=datetime.now)
     updateat: datetime = Field(default_factory=datetime.now)
-    users_id : int = Field(foreign_key="user.id")   #relation with Users
-    favorite_id : int = Field(foreign_key="favorite.id") #relation with Favorite
+    
+    #Relationship 1 to
+    favorites : List[Favorite] = Relationship(back_populates="vegetable")
     
     
-#Table Favorite
-class Favorite (SQLModel , table = True):
-    id : int = Field(default = None , primary_key = True)
-    users_id :int = Field(foreign_key="user.id") #relation with Users
-    vegetable_id : int = Field(foreign_key="vegetable.id") #relation with Vegetable
-    createat : datetime = Field(default_factory=datetime.now)
-    deleteat : datetime = Field(default_factory=datetime.now)
-    updateat : datetime = Field(default_factory=datetime.now)
     
     
     
