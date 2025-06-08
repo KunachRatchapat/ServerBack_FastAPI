@@ -3,18 +3,17 @@ from sqlmodel import Field, SQLModel , Relationship
 from datetime import datetime 
  
     #---Table Favorite---
-class Favorite (SQLModel , table = True):
-    id : int = Field(default = None , primary_key = True)
-    users_id :int = Field(foreign_key="user.id") #relation with Users
-    vegetable_id : int = Field(foreign_key="vegetable.id") #relation with Vegetable
-    createat : datetime = Field(default_factory=datetime.now)
-    deleteat : datetime = Field(default_factory=datetime.now)
-    updateat : datetime = Field(default_factory=datetime.now)
+class Favorite(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    users_id: int = Field(foreign_key="users.id")         
+    vegetable_id: int = Field(foreign_key="vegetable.id")  
+    createat: datetime = Field(default_factory=datetime.now)
+    deleteat: Optional[datetime] = Field(default=None)
+    updateat: datetime = Field(default_factory=datetime.now)
     
-    #--Relation 1 to M
-    user : Optional["Users"] = Relationship(back_populates="favorites")
-    vegetable : Optional["Vegetable"] = Relationship(back_populates="favorites")
-    
+    #Relationship User to fav and Vegetable to fav
+    user: Optional["Users"] = Relationship(back_populates="favorites")
+    vegetable: Optional["Vegetable"] = Relationship(back_populates="favorites")
     
     #---Table User---
 class Users (SQLModel , table = True):
@@ -25,7 +24,7 @@ class Users (SQLModel , table = True):
     surname : str = Field()
     identification : str = Field()
     createat : datetime = Field(default_factory=datetime.now)
-    deleteat : datetime = Field(default_factory=datetime.now)
+    deleteat: Optional[datetime] = Field(default=None)
     updateat : datetime = Field(default_factory=datetime.now)
     
     #Relationship 1 to M
@@ -39,7 +38,7 @@ class Vegetable (SQLModel , table=True):
     description : str = Field()
     picture : str =  Field()
     createat : datetime = Field(default_factory=datetime.now)
-    deleteat: datetime = Field(default_factory=datetime.now)
+    deleteat: Optional[datetime] = Field(default=None)
     updateat: datetime = Field(default_factory=datetime.now)
     
     #Relationship 1 to
