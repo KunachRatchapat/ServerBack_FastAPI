@@ -9,7 +9,7 @@ router = APIRouter(prefix="/vegetables", tags=["Vegetables"])
 SessionDep = Annotated[Session, Depends(get_session)]
 
 #--Add Vegetable-- (For Dev)
-@router.post("/vegetable", response_model=Vegetable)
+@router.post("/add", response_model=Vegetable)
 def create_vegetable(vegetable: Vegetable, session: SessionDep):
     session.add(vegetable)
     session.commit()
@@ -17,7 +17,7 @@ def create_vegetable(vegetable: Vegetable, session: SessionDep):
     return vegetable
 
 #--Show All Vegetable-- (Home)
-@router.get("/vegetables", response_model=list[Vegetable])
+@router.get("/", response_model=list[Vegetable])
 def read_vegetables(
     session: SessionDep,
     offset: int = 0,
@@ -26,12 +26,15 @@ def read_vegetables(
     vegetables = session.exec(select(Vegetable).offset(offset).limit(limit)).all()
     return vegetables
 
+#--Search Vegetable--
+
+
 #--Delete Vegetable--
-@router.delete("/vegetable/{vegetable_id}")
+@router.delete("/{vegetable_id}")
 def delete_vegetable(vegetable_id: int, session: SessionDep):
     vegetable = session.get(Vegetable, vegetable_id)
     if not vegetable:
         raise HTTPException(status_code=404, detail="Vegetable not found")
     session.delete(vegetable)
     session.commit()
-    return {"Success": True}
+    return {"Success": "Can delete That "}
