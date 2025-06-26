@@ -1,12 +1,15 @@
-from fastapi import APIRouter, HTTPException, Depends, Query
-from typing import Annotated
+from fastapi import APIRouter, HTTPException, Depends, Query 
+from typing import Annotated , Optional
 from sqlmodel import select, Session
-from db.model import Vegetable
+from db.models import vegetable_model 
 from db.database import get_session
+
+Vegetable =  vegetable_model.Vegetable
 
 router = APIRouter() 
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
 
 #--Add Vegetable-- (For Dev)
 @router.post("/vegetable", response_model=Vegetable)
@@ -15,7 +18,7 @@ def create_vegetable(vegetable: Vegetable, session: SessionDep):
         session.add(vegetable)
         session.commit()
         session.refresh(vegetable)
-        print("Add Vegetable Success")
+        print("Add Vegetable Success",vegetable.name)
         return vegetable
         
     except Exception as e :
@@ -30,17 +33,26 @@ def read_vegetables(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100
 ):
+    
     try:  
         vegetables = session.exec(select(Vegetable).offset(offset).limit(limit)).all()
+        print("Show Vegetables")
         return vegetables
+    
     except Exception as e:
       print("Error Show Vegetables")
       raise HTTPException(status_code=500)  
     
+    
 #--Search Vegetable--
+@router.get("/vegetable/{vegetable_id}", response_model=Vegetable)
+def read_vegetable_id(vegetable_id: int , session: SessionDep):
+    vegetable =  session.get(Vegetable , vegetable_id)
+    if not vegetable:
+        raise HTTPException(status_code=404, detail="Vegetable not fount")
+    return vegetable
 
-
-
+    
 #--Delete Vegetable--
 @router.delete("/vegetable/{vegetable_id}")
 def delete_vegetable(vegetable_id: int, session: SessionDep):
@@ -49,4 +61,4 @@ def delete_vegetable(vegetable_id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Vegetable not found")
     session.delete(vegetable)
     session.commit()
-    return {"Success": "Can delete That "}
+    return {"Success": "Can Delete That "}

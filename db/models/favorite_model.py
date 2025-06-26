@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Optional , TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
-from .vegetable_model import Vegetable
-from .user_model import Users
-from .fruit_model import Fruit
 
-
+if TYPE_CHECKING:
+    from .user_model import Users
+    from .vegetable_model import Vegetable
+    from .fruit_model import Fruit
  
 #---Table Favorite---
 class Favorite(SQLModel, table=True):

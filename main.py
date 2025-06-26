@@ -7,6 +7,7 @@ app = FastAPI()
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
-
-# Router สำหรับ Vegetable
+    
+    
 app.include_router(vegetable.router)
+

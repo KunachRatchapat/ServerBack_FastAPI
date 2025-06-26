@@ -14,5 +14,6 @@ class Vegetable(SQLModel , table=True):
     updateat: Optional[datetime] = Field(default=None, nullable=True)
     
     #Relationship 1 to M
-    favorites : List[Favorite] = Relationship(back_populates="vegetable")
+    favorites : List["Favorite"] = Relationship(back_populates="vegetable")
+    
     
