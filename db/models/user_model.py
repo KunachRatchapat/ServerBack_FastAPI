@@ -10,7 +10,6 @@ class Users(SQLModel , table = True):
     password : str = Field()
     name : str = Field(index = True)
     surname : str = Field()
-    identification : str = Field()
     createat : datetime = Field(default_factory=datetime.now)
     deleteat: Optional[datetime] = Field(default=None, nullable=True)
     updateat : Optional[datetime] = Field(default=None, nullable=True)
