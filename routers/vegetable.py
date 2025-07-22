@@ -43,16 +43,7 @@ def read_vegetables(
       print("Error Show Vegetables")
       raise HTTPException(status_code=500)  
     
-    
-#--Search Vegetable--
-@router.get("/vegetable/{vegetable_id}", response_model=Vegetable)
-def read_vegetable_id(vegetable_id: int , session: SessionDep):
-    vegetable =  session.get(Vegetable , vegetable_id)
-    if not vegetable:
-        raise HTTPException(status_code=404, detail="Vegetable not fount")
-    return vegetable
-
-    
+      
 #--Delete Vegetable--
 @router.delete("/vegetable/{vegetable_id}")
 def delete_vegetable(vegetable_id: int, session: SessionDep):
