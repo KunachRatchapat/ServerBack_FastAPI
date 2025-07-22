@@ -12,7 +12,6 @@ Favorite = favorite_model.Favorite
 Vegetable = vegetable_model.Vegetable
 Fruit = fruit_model.Fruit
 
-
 router = APIRouter()
 SessionDep = Annotated[Session , Depends(get_session)]
 
@@ -43,7 +42,7 @@ class FavoriteItemRespone(BaseModel):
 
 
 #---Add Favorite---
-@router.post("/toggle",response_model=FavoriteRespone)
+@router.post("/favorite/toggle",response_model=FavoriteRespone)
 def toggle_favorite(favorite_data: FavoriteCreate , session: SessionDep):
     try:
         #--Check ว่ามีรายการผักผลไม้นี้ไหม--
@@ -59,7 +58,7 @@ def toggle_favorite(favorite_data: FavoriteCreate , session: SessionDep):
             
         #--Press Toggle Button--
         toggle = session.exec(query).first()
-        print(JSONResponse(content={"message": "Favorite Success"} , status_code=200))
+        print(JSONResponse(content={"message": "Favorite"}))
         
         if toggle:
             session.delete(toggle)
@@ -90,7 +89,7 @@ def toggle_favorite(favorite_data: FavoriteCreate , session: SessionDep):
         raise HTTPException(status_code=500 , detail="Server Error !!")
     
     
-#--Show FavoriteVegetable--
+#--Show Favorite Vegetable--
 @router.get("/favorites",response_model=List[FavoriteItemRespone])
 def get_favorites(user_id : int , session : SessionDep):
     try:

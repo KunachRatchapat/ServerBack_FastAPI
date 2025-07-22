@@ -7,8 +7,8 @@ from .favorite_model import Favorite
 class Vegetable(SQLModel , table=True):
     id : Optional[int] = Field(default= None, primary_key=True)
     name : str = Field(index = True)
+    picture : str
     description : str = Field()
-    picture : str 
     createat : datetime = Field(default_factory=datetime.now)
     deleteat: Optional[datetime] = Field(default=None, nullable=True)
     updateat: Optional[datetime] = Field(default=None, nullable=True)
