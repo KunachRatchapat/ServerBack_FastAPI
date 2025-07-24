@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from db.database import create_db_and_tables
-from routers import vegetable,favorite
+from routers import vegetable,favorite, fruit
 
 app = FastAPI()
 
@@ -10,4 +10,5 @@ def on_startup():
     
     
 app.include_router(vegetable.router)
-app.include_router(favorite.router , prefix="/favorite")
+app.include_router(favorite.router)
+app.include_router(fruit.router)

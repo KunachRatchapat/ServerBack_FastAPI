@@ -24,6 +24,7 @@ def create_fruit(fruit: Fruit, session:SessionDep):
         print("Error Add Fruit !!", str(e))
         raise HTTPException(status_code=500, detail="Failed to Add Fruit")
     
+    
 #--Show All Fruit--(Home)
 @router.get("/fruits", response_model=list[Fruit])
 def read_fruit(
@@ -39,6 +40,17 @@ def read_fruit(
     except Exception as e:
         print("Error Show Fruits")
         raise HTTPException(status_code=500)
+    
+    
+#---Delete Fruit---
+@router.delete("/fruit/{fruit_id}")
+def delete_fruit(fruit_id:int , session:SessionDep):
+    fruit = session.get(Fruit, fruit_id)
+    if not fruit:
+        raise HTTPException(status_code=404,detail="Fruit not Found")
+    session.delete(fruit)
+    session.commit()
+    return {"Success": "Can Delete That"}
         
         
                               

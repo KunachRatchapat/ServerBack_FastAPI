@@ -8,7 +8,7 @@ class Fruit(SQLModel , table =True):
     id : Optional[int] = Field(default=None , primary_key=True)
     name : str = Field(index= True)
     picture : str
-    description : str = Field()
+    description : str| None = Field(default=None,nullable=True)
     createat : datetime = Field(default_factory=datetime.now)
     deleteat: Optional[datetime] = Field(default=None, nullable=True)
     updateat: Optional[datetime] = Field(default=None, nullable=True)
