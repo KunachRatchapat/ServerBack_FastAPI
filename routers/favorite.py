@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Query, Body
 from typing import Annotated , Optional , List 
 from sqlmodel import select, Session
-from db.models import favorite_model , user_model , fruit_model , vegetable_model 
+from db.models import favorite_model , fruit_model , vegetable_model 
 from db.database import get_session
 from pydantic import BaseModel
 from datetime import datetime
