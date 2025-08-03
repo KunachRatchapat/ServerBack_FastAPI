@@ -17,4 +17,3 @@ class Users(SQLModel , table = True):
     #Relationship 1 to M
     favorites: List[Favorite] = Relationship(back_populates="user")
 
-    
