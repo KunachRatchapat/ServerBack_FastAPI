@@ -11,11 +11,13 @@ class BaseRepo:
         return model
 
 class UsersRepo(BaseRepo):
+    
+    #---find Email---
     @staticmethod
     def find_by_email(db: Session, email: str) -> Optional[Users]:
         return db.exec(select(Users).where(Users.email == email)).first()
     
-    #---find Name---
+    #---find Username---
     @staticmethod
-    def find_by_name(db: Session, name: str) -> Optional[Users]:
-        return db.exec(select(Users).where(Users.name == name)).first()
+    def find_by_username(db: Session, username: str) -> Optional[Users]:
+        return db.exec(select(Users).where(Users.username == username)).first()

@@ -17,13 +17,13 @@ class Register(BaseModel):
     surname: str
     
 #--ResponeSchema---
-class ResponseSchema(GenericModel,Generic[T]):
+class ResponseSchema(BaseModel,Generic[T]):
     code: str
     status: str
     message: str
     result: Optional[T] = None
     
 #---Token---
-class TokenRespone(BaseModel):
+class TokenResponse(BaseModel):
     access_token: str
     token_type: str
