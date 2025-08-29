@@ -13,7 +13,7 @@ router = APIRouter()
 
 pwd_context = CryptContext(schemes=['bcrypt'],deprecated="auto")
 
-#---Register---
+#--- Register ---
 @router.post('/Authentication/signup',response_model=ResponseSchema)
 def signup(request: Register, db: Session = Depends(get_session)):
     try:
@@ -47,19 +47,19 @@ def signup(request: Register, db: Session = Depends(get_session)):
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-#---Login---
+#--- Login ---
 @router.post('/Authentication/login',response_model=ResponseSchema)
 def login(request: Login, db: Session = Depends(get_session)):
     try:
         #--- Find by Username ---
         _user = UsersRepo.find_by_email(db,request.email) 
         
-           #---Check if user exists and verify password ---
+           #--- Check if user exists and verify password ---
         if not _user or not pwd_context.verify(request.password, _user.password):
             raise HTTPException(status_code=401, detail="Invalid username or password")
         
          # --- Generate token ---
-        token_data = {"sub": _user.username}
+        token_data = {"sub": _user.username , "role":_user.role}
         token = JWTRepo.generate_token(data=token_data)
         
         #--- Return success response with token ---
