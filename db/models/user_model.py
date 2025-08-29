@@ -11,6 +11,8 @@ class Users(SQLModel , table = True):
     password : str = Field()
     username : str = Field(index = True)
     surname : str = Field()
+    role  : str = Field(default="user")
+    
     createat : datetime = Field(default_factory=datetime.now)
     deleteat: Optional[datetime] = Field(default=None, nullable=True)
     updateat : Optional[datetime] = Field(default=None, nullable=True)
