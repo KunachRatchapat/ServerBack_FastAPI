@@ -9,7 +9,7 @@ load_dotenv()
 
 SECRET_KEY: str = os.getenv("SECRET_KEY") # type: ignore
 ALGORITHM: str  = os.getenv("JWT_ALGORITHM") # type: ignore
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "4320"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "43830"))
 
 # --- Protect SECRET_KEY ---
 if not SECRET_KEY:

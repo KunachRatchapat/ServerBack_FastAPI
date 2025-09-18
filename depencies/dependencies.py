@@ -10,30 +10,32 @@ from typing import Optional, Dict, Any
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="Authentication/login")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_session)):
+    # ถอดรหัส Token เพื่อดึงข้อมูล payload
     payload: Dict[str, Any] = JWTRepo.decode_token(token=token)
     
-    # --- ตรวจสอบว่า payload ว่างหรือไม่ (Token ไม่ถูกต้อง/หมดอายุ) ---
+    # ตรวจสอบว่า payload ว่างหรือไม่ (ถ้าว่างแสดงว่า Token ไม่ถูกต้อง/หมดอายุ)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    # ---  ดึง username และ role จาก payload ---
+    # ดึง username และ role จาก payload
     username: Optional[str] = payload.get("sub")
-    role_from_token : Optional[str] = payload.get("role")
+    role_from_token: Optional[str] = payload.get("role")
     
-    # --- **เพิ่มการตรวจสอบตรงนี้** เพื่อให้แน่ใจว่า username ไม่ใช่ None ---
+    # ตรวจสอบว่า username มีค่าหรือไม่
     if username is None:
-        raise HTTPException(status_code=401, detail="Invalid token payload")
+        raise HTTPException(status_code=401, detail="Invalid token payload: 'sub' not found")
 
-    #--- เมื่อแน่ใจว่า username เป็น str แล้ว ค่อยเรียกใช้ฟังก์ชันค้นหา ---
+    # ค้นหาผู้ใช้จากฐานข้อมูล
     user = UsersRepo.find_by_username(db, username=username)
     
-    #--- No Users ---
+    # ถ้าไม่พบผู้ใช้ในฐานข้อมูล
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     
-    #--- Check role Token in like Database ---
+    # ตรวจสอบว่า role ที่มาจาก Token ตรงกับ role ในฐานข้อมูลหรือไม่
     if user.role != role_from_token:
-        raise HTTPException(status_code=401, detail="Invalid Token: role mismatch")
+        # อาจเป็นไปได้ว่า role_from_token เป็น None หรือไม่ตรงกัน
+        raise HTTPException(status_code=401, detail="Invalid token: role mismatch")
     
     return user
 

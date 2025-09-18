@@ -18,4 +18,4 @@ class UsersRepo(BaseRepo):
     #---find Name---
     @staticmethod
     def find_by_name(db: Session, name: str) -> Optional[Users]:
-        return db.exec(select(Users).where(Users.name == name)).first()
+        return db.exec(select(Users).where(Users.username == name)).first()

@@ -76,6 +76,7 @@ def login(request: Login, db: Session = Depends(get_session)):
         print(f"Error during login: {error}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+# --- 
 
     
     
