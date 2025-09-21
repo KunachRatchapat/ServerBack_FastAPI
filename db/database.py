@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, create_engine, Session
 import os
 from dotenv import load_dotenv
 
-# โหลด .env
+
 load_dotenv()
 
 POSTGRES_USER = os.getenv("POSTGRES_USER")

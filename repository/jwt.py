@@ -4,7 +4,7 @@ from jose import jwt, JWTError
 import os
 from dotenv import load_dotenv
 
-# -- Read file ENV --
+
 load_dotenv()   
 
 SECRET_KEY: str = os.getenv("SECRET_KEY") # type: ignore
@@ -21,18 +21,18 @@ class JWTRepo:
         to_encode = data.copy()
         expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         
-        # ใส่ expire เข้าไปใน payload
+        
         to_encode.update({"exp": expire}) 
         
-        # sign token ด้วย SECRET_KEY + ALGORITHM
+        
         return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     
     @staticmethod
     def decode_token(token: str) -> Dict[str, Any]:
         try:
-            # decode token ได้ payload กลับมา
+           
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             return payload
         
         except JWTError:
-            return {}  # ถ้า token หมดอายุ / ผิดพลาด จะ return {} (payload ว่าง)
+            return {}  # ถ้า token หมดอายุ จะ รีเทินค่าว่าง
