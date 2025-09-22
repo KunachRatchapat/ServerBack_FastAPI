@@ -21,7 +21,7 @@ class FavoriteCreate(BaseModel):
     vegetable_id : Optional[int] = None
     fruit_id : Optional[int] = None
 
-#---Respone Model---
+#เมื่อเพิ่มสำเร็จ
 class FavoriteRespone(BaseModel):
     id : int
     user_id : int
@@ -45,7 +45,7 @@ class FavoriteItemRespone(BaseModel):
 @router.post("/favorite/toggle",response_model=FavoriteRespone)
 def toggle_favorite(favorite_data: FavoriteCreate , session: SessionDep):
     try:
-        #--Check ว่ามีรายการผักผลไม้นี้ไหม--
+        #Check ว่าเคยกดไลค์ยัง
         query = select(Favorite).where(Favorite.users_id == favorite_data.user_id)
         
         #--Check Vegetable already--
@@ -102,8 +102,8 @@ def get_favorites(user_id : int , session : SessionDep):
         response = []
         
         for f in favorites: 
-            #--If it's a Vegetable favorite
-           if f.vegetable_id: #if f have vegetable id it Vegetable
+            #
+           if f.vegetable_id:
                veg = session.get(Vegetable, f.vegetable_id)
                if veg: #กัน veg เป็น none
                     response.append(FavoriteItemRespone(
@@ -114,10 +114,8 @@ def get_favorites(user_id : int , session : SessionDep):
                         item_name = veg.name,
                         item_description = veg.description,
                         item_image_url = veg.picture,
-                        createat = f.createat
-                    
+                        createat = f.createat  
                ))
-            
         #--If it's a Fruit favorite
            elif f.fruit_id:
                fruit = session.get(Fruit , f.fruit_id)

@@ -11,7 +11,7 @@ router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-#--Add Vegetable-- (For Dev)
+#--เพิ่มผัก-- 
 @router.post("/vegetable", response_model=Vegetable)
 def create_vegetable(vegetable: Vegetable, session: SessionDep):
     try:
@@ -25,15 +25,13 @@ def create_vegetable(vegetable: Vegetable, session: SessionDep):
         print("Error Add Vegetable !!",str(e))
         raise HTTPException(status_code=500, detail="Failed to add vegetable")
     
-
-#--Show All Vegetable-- (Home)
+#--Show All Vegetable-- 
 @router.get("/vegetables", response_model=list[Vegetable])
 def read_vegetables(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100
 ):
-    
     try:  
         vegetables = session.exec(select(Vegetable).offset(offset).limit(limit)).all()
         print("Show Vegetables")
@@ -42,8 +40,7 @@ def read_vegetables(
     except Exception as e:
       print("Error Show Vegetables")
       raise HTTPException(status_code=500)  
-    
-      
+        
 #--Delete Vegetable--
 @router.delete("/vegetable/{vegetable_id}")
 def delete_vegetable(vegetable_id: int, session: SessionDep):

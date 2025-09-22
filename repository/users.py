@@ -10,6 +10,7 @@ class BaseRepo:
         db.refresh(model)
         return model
 
+#--หาพวกอีเมลชื่อซ้ำกัน ---
 class UsersRepo(BaseRepo):
     @staticmethod
     def find_by_email(db: Session, email: str) -> Optional[Users]:

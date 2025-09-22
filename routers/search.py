@@ -12,6 +12,7 @@ SessionDep = Annotated[Session , Depends(get_session)]
 class SearchResult(BaseModel):
     name: str
 
+
 @router.get("/search", response_model=list[SearchResult])
 def search_Veggie(
     session: SessionDep,

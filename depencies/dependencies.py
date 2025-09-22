@@ -12,15 +12,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="Authentication/login")
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_session)):
     payload: Dict[str, Any] = JWTRepo.decode_token(token=token)
     
-    #Check payload
+    # -- Check payload --
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    # ดึง username และ role จาก payload
+    # -- ดึง username และ role จาก payload --
     username: Optional[str] = payload.get("sub")
     role_from_token: Optional[str] = payload.get("role")
     
-    #เช็คด้วยว่า user มีไรส่งมาไหม
+    #-- เช็คด้วยว่า user มีไรส่งมาไหม --
     if username is None:
         raise HTTPException(status_code=401, detail="Invalid token payload: 'sub' not found")
 
@@ -30,7 +30,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     
-    # เช็คroleที่มาจากTokenตรงกับroleไหม 
+    # -- เช็คroleที่มาจากTokenตรงกับ role ไหม --
     if user.role != role_from_token:
         raise HTTPException(status_code=401, detail="Invalid token: role mismatch")
     return user
