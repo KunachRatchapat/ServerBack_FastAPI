@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from db.database import create_db_and_tables
-from routers import users, vegetable,favorite,fruit,search,admin
+from routers import users, vegetable,favorite,fruit,search,admin, prediction
 
 app = FastAPI()
 
@@ -15,4 +15,6 @@ app.include_router(fruit.router)
 app.include_router(search.router)
 app.include_router(users.router)
 app.include_router(admin.router)
+app.include_router(prediction.router)
+
 
