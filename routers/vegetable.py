@@ -25,7 +25,7 @@ def create_vegetable(vegetable: Vegetable, session: SessionDep):
         print("Error Add Vegetable !!",str(e))
         raise HTTPException(status_code=500, detail="Failed to add vegetable")
     
-#--Show All Vegetable-- 
+#--โชว์ผักทั้งหมด-- 
 @router.get("/vegetables", response_model=list[Vegetable])
 def read_vegetables(
     session: SessionDep,
@@ -41,7 +41,7 @@ def read_vegetables(
       print("Error Show Vegetables")
       raise HTTPException(status_code=500)  
         
-#--Delete Vegetable--
+#--ลบผัก--
 @router.delete("/vegetable/{vegetable_id}")
 def delete_vegetable(vegetable_id: int, session: SessionDep):
     vegetable = session.get(Vegetable, vegetable_id)
