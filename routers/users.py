@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 from sqlmodel import  Session
 from typing import Annotated
-from schema.users import ResponseSchema, Login, TokenResponse,Register
+from schema.users_schema import ResponseSchema, Login, TokenResponse,Register
 from passlib.context import CryptContext
 from repository.users import UsersRepo
 from repository.jwt import JWTRepo
@@ -60,7 +60,7 @@ def login(request: Login, db: SessionDep):
         result=TokenResponse(access_token=token, token_type="bearer")
     )
     
-    
+#--- ล็อคเอ้าต์ ---
 @router.post("/Authentication/logout", response_model=ResponseSchema)
 def logout(current_user: Users = Depends(get_current_user)):
    

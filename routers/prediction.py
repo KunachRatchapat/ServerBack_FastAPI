@@ -1,50 +1,72 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException, status
-from typing import List
-import tensorflow as tf
-from PIL import Image, ImageOps
-import numpy as np
+import os
 import io
-import keras
+import pickle
+from PIL import Image
+from img2vec_pytorch import Img2Vec
+import numpy as np
 
 router = APIRouter()
+rf_model =None
+img2vec_model = None
+class_name = []
 
-try:
-    model = keras.models.load_model('ai_model/keras_model.h5', compile=False)
-    class_names = open('ai_model/labels.txt', 'r', encoding='utf-8').readlines()  # อ่านโมเดลทุกตัวทุกบรรทัด
-except Exception as e:
-    model = None
-    class_names = []
+MODEL_PATH = 'ai_model/tomato.p'
+LABELS_PATH = 'ai_model/tomato_labels.txt'
 
+@router.on_event("startup")
+async def load_models_on_startup():
+    global rf_model, img2vec_model, class_names
+    try:
+        if not os.path.exists(MODEL_PATH):
+            raise FileNotFoundError(f"Random Forest Model file not found at:{MODEL_PATH}")
+        with open(MODEL_PATH,'rb') as f:
+            rf_model = pickle.load(f)
+            
+        img2vec_model = Img2Vec(cuda=False)
+        # --- โหลด Class Names (Labels) ---
+        if not os.path.exists(LABELS_PATH):
+            raise FileNotFoundError(f"Labels Filde not found at:{LABELS_PATH}")
+        
+        with open(LABELS_PATH,'r',encoding='utf-8') as f:
+            
+            class_names = [line.strip() for line in f.readlines()]
+            
+        print("AI models (Random Forest, Img2Vec) and labels loaded successfully! ") 
+        print(f"Detected classes: {class_names}")
+        
+    except Exception as e:
+        print(f"Error loading models on startup:{e}")
+        
+        raise RuntimeError(f"Failed to load AI models on startup:{e}")
+    
 @router.post("/predict")
-async def predict_images(file: UploadFile = File(...)):
-    if model is None or not class_names:
-        raise HTTPException(status_code=500, detail="Model or class labels not loaded.")
-
-    #-- อ่านไฟล์รูปภาพ --
-    contents = await file.read()
-    image = Image.open(io.BytesIO(contents)).convert('RGB')
-
-    #-- ปรับขนาดรูปให้ตรงกับโมเดล --
-    size = (224, 224)
-    image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
-    image_array = np.array(image)
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
-
-    #-- เตรียมข้อมูล --
-    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    data[0] = normalized_image_array
-
-    #-- Predict --
-    prediction = model.predict(data)
-    index = np.argmax(prediction)
-    class_name = class_names[index].strip()[2:] if len(class_names) > index else "Unknown"
-    confidence_score = prediction[0][index]
-
+async def predict_image(file: UploadFile =  File(...)):
+    if rf_model is None or img2vec_model is None or not class_names:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="AI models are not ready. Server failed to load resources.!")
+    
+    contents = await file.read() 
+    try:
+        img = Image.open(io.BytesIO(contents)).convert('RGB')
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid image file format")
+    
+    features = img2vec_model.get_vec(img)
+    
+    prediction_array = rf_model.predict([features])
+    probabilities = rf_model.predict_proba([features])[0]
+    
+    predicted_class_name = prediction_array[0]
+    
+    class_indices = list(rf_model.classes_)
+    
+    if predicted_class_name in class_indices:
+        index = class_indices.index(predicted_class_name)
+        confidence_score = probabilities[index]
+    else:
+        confidence_score = 0.0
+        
     return {
-        "class": class_name,
-        "confidence": float(confidence_score)
+        "class": str(predicted_class_name),
+        "confidence" : float(confidence_score)
     }
-    
-    
-    
-    

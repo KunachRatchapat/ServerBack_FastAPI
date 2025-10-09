@@ -18,7 +18,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     
     # -- ดึง username และ role จาก payload --
     username: Optional[str] = payload.get("sub")
-    role_from_token: Optional[str] = payload.get("role")
+   
     
     #-- เช็คด้วยว่า user มีไรส่งมาไหม --
     if username is None:
@@ -30,9 +30,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     
-    # -- เช็คroleที่มาจากTokenตรงกับ role ไหม --
-    if user.role != role_from_token:
-        raise HTTPException(status_code=401, detail="Invalid token: role mismatch")
+   
     return user
 
 #สิทธิ์แอดมิน

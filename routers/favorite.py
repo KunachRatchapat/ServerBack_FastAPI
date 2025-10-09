@@ -4,7 +4,7 @@ from sqlmodel import select, Session
 from db.models import favorite_model , fruit_model , vegetable_model 
 from db.database import get_session
 from pydantic import BaseModel
-from datetime import datetime
+from schema.favorite_schema import FavoriteCreate,FavoriteRespone,FavoriteItemRespone
 from fastapi.responses import JSONResponse
 
 #--Call Class Models--
@@ -14,31 +14,6 @@ Fruit = fruit_model.Fruit
 
 router = APIRouter()
 SessionDep = Annotated[Session , Depends(get_session)]
-
-#---Request Model---
-class FavoriteCreate(BaseModel):
-    user_id : int
-    vegetable_id : Optional[int] = None
-    fruit_id : Optional[int] = None
-
-#เมื่อเพิ่มสำเร็จ
-class FavoriteRespone(BaseModel):
-    id : int
-    user_id : int
-    vegetable_id : Optional[int] = None
-    fruit_id : Optional[int] = None
-    createat : datetime
-    
-#---Respone FavoriteItem---
-class FavoriteItemRespone(BaseModel):
-    id : int 
-    user_id : int
-    type : str
-    item_id :Optional[int] = None
-    item_name : str
-    item_description : Optional[str] = None
-    item_image_url : Optional[str] = None
-    createat : datetime
 
 
 #---Add Favorite---

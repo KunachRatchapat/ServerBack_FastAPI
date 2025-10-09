@@ -5,7 +5,6 @@ from .favorite_model import Favorite
  
 #---Table User---
 class Users(SQLModel , table = True):
-    
     id : Optional[int] = Field(default =None, primary_key=True)
     email : str = Field()
     password : str = Field()
