@@ -57,61 +57,60 @@ Data_Fruits = [
         "description":"เชอร์รี่มีรสชาติ หวานอมเปรี้ยว โดยรสชาติจะแตกต่างกันไปตามสายพันธุ์ บางชนิดจะหวานกว่า บางชนิดจะเปรี้ยวจี๊ดกว่า โดยทั่วไปเชอร์รี่ที่สุกแล้วจะมีเนื้อแน่น ฉ่ำ และมีความกรอบอร่อย"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Corn--
+        "name": "Corn (ข้าวโพด)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Corn.jfif",
+        "description":"ข้าวโพดมีรสชาติหวานมัน และมีหลายประเภท เช่น ข้าวโพดหวานที่มีรสหวานตามธรรมชาติ, ข้าวโพดเทียนมีเนื้อสัมผัสเหนียว, และข้าวโพดนมสดฮอกไกโดที่มีรสหวานฉ่ำคล้ายนมสด"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Grape--
+        "name": "Grape (องุ่น)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Grape.jpg",
+        "description":" องุ่นมีรสชาติหลักๆ คือ หวานอมเปรี้ยว ซึ่งแต่ละสายพันธุ์จะมีรสชาติและเนื้อสัมผัสที่แตกต่างกันไป ตั้งแต่หวานสดชื่นไปจนถึงหวานหอมเข้มข้น มีหลายพันธุ์ที่ได้รับความนิยม เช่น องุ่นเคียวโฮ (หวานอมเปรี้ยว กลิ่นหอม), องุ่นไชมัสคัส (หวานเข้มข้น ฉ่ำน้ำ กลิ่นหอมเฉพาะตัว) หรือองุ่น Autumn Crisp (หวานอมเปรี้ยว เนื้อกรอบแน่น)"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Mango--
+        "name": "Mango (มะม่วง)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Mango.jpg",
+        "description":"รสชาติของมะม่วงมีหลากหลายตามสายพันธุ์และอายุ ตั้งแต่เปรี้ยวจัดในมะม่วงดิบไปจนถึงหวานจัดในมะม่วงสุก บางพันธุ์มีรสชาติเฉพาะตัว เช่น มัน หวาน กรอบ หรือ หวานอมเปรี้ยว"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Nut--
+        "name": "Nut (ถั่ว)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Nut.jpg",
+        "description":"รสชาติของถั่ว (Nut) มีหลากหลายขึ้นอยู่กับชนิดของถั่วและวิธีการปรุง โดยทั่วไปมีรส หวานมัน เป็นหลัก เช่น วอลนัทและพีแคน นอกจากนี้ยังมีรสชาติอื่นๆ ที่ได้จากการปรุง"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Orange--
+        "name": "Orange (ส้ม)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Orange.jfif",
+        "description":" รสชาติของส้มโดยทั่วไปคือ หวานอมเปรี้ยว พร้อมกลิ่นหอมสดชื่น แต่จะแตกต่างกันไปตามสายพันธุ์"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Papaya--
+        "name": "Papaya (มะละกอ)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Papaya.jpg",
+        "description":"มะละกอมีรสชาติที่แตกต่างกันไปตามความสุกและสายพันธุ์ โดยมะละกอสุกจะมีรส หวานหอม ส่วนมะละกอดิบจะมีรส จืดและกรอบ นอกจากนี้ ยังมีพันธุ์ที่ให้รสชาติเปรี้ยวอมหวาน เช่น มะละกอแขกนวล"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Pumpkin--
+        "name": "Pumpkin (ฟักทอง)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Pumpkin.jfif",
+        "description":"รสชาติของฟักทองจะ หวานมันและมีกลิ่นหอมเฉพาะตัว ซึ่งอาจแตกต่างกันไปตามสายพันธุ์ โดยทั่วไปฟักทองสุกจะมีเนื้อแน่นและนุ่ม มีทั้งรสหวานธรรมชาติหรือรสชาติเหมือนถั่วเล็กน้อยขึ้นอยู่กับพันธุ์"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Strawberry --
+        "name": "Strawberry (สตรอเบอรี่)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Strawberry.jpg",
+        "description":"สตรอว์เบอร์รีมีรสชาติโดยรวมคือ เปรี้ยวอมหวาน และ มีกลิ่นหอม เป็นเอกลักษณ์โดยรสชาติที่เด่นชัดนี้จะแตกต่างกันไปในแต่ละสายพันธุ์และแหล่งที่ปลูก"
     },
     
-     {    #--Apple--
-        "name": "Apple (แอปเปิ้ล)",
-        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Apple.jpg",
-        "description":" จะมีรสหวานฉ่ำ เหมาะสำหรับทานสดหรือทำขนม ในขณะที่ แอปเปิลเขียว จะมีรสเปรี้ยวอมหวาน เนื้อแน่นกรอบ เหมาะสำหรับนำไปทำสลัดหรือขนม "
+     {    #--Tomato--
+        "name": "Tomato (มะเขือเทศ)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Tomato.jpg",
+        "description":"รสชาติของมะเขือเทศจะแตกต่างกันไปตามสายพันธุ์ โดยทั่วไปจะมีรส เปรี้ยวอมหวาน มะเขือเทศบางพันธุ์จะมีรสหวานจัด ในขณะที่บางพันธุ์จะรสเปรี้ยวเด่นบางสายพันธุ์จะมีรสชาติกลมกล่อม"
     },
-    
-    
-    
     
 ]
+    
+    
