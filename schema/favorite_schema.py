@@ -12,7 +12,7 @@ class FavoriteCreate(BaseModel):
 
 #เมื่อเพิ่มสำเร็จ
 class FavoriteRespone(BaseModel):
-    id : int
+    id: Optional[int] = None
     user_id : int
     vegetable_id : Optional[int] = None
     fruit_id : Optional[int] = None
@@ -20,7 +20,7 @@ class FavoriteRespone(BaseModel):
     
 #---Respone FavoriteItem---
 class FavoriteItemRespone(BaseModel):
-    id : int 
+    id : Optional[int] 
     user_id : int
     type : str
     item_id :Optional[int] = None

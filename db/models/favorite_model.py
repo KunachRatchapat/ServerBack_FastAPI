@@ -11,10 +11,10 @@ if TYPE_CHECKING:
  
 #---Table Favorite---
 class Favorite(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    users_id: int = Field(foreign_key="users.id")         
-    vegetable_id: Optional[int] = Field(foreign_key="vegetable.id") 
-    fruit_id: Optional[int] = Field(default=None, foreign_key="fruit.id") 
+    id: Optional[int] = Field(default=None, primary_key=True)       
+    users_id: int = Field(foreign_key="users.id")  #เอา user.id จากตาราง Users       
+    vegetable_id: Optional[int] = Field(default=None, foreign_key="vegetable.id") #เอา vegetable.id จากตาราง Vegetable   
+    fruit_id: Optional[int] = Field(default=None, foreign_key="fruit.id")  #เอา fruit.id จากตาราง Fruit   
     createat: datetime = Field(default_factory=datetime.now)
     deleteat: Optional[datetime] = Field(default=None, nullable=True)
     updateat: Optional[datetime] = Field(default=None, nullable=True)

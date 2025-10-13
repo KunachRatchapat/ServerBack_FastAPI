@@ -1,8 +1,28 @@
-from sqlmodel import Session, create_engine
+
+from sqlmodel import Session, create_engine, select
 import os
 from dotenv import load_dotenv
+
+
+from db.models.user_model import Users
 from db.models.fruit_model import Fruit
 from db.models.vegetable_model import Vegetable
+from db.models.favorite_model import Favorite
+
+from pydantic import BaseModel
+from typing   import Optional
+
+
+class FruitInput(BaseModel):
+    name: str
+    picture: str
+    description: Optional[str]
+
+class VegetableInput(BaseModel):
+    name: str
+    picture: str
+    description: Optional[str]
+
 
 load_dotenv()
 
@@ -16,8 +36,8 @@ DATABASE_URL = (   f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}"
                     f"@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
  )
 
-
 engine = create_engine(DATABASE_URL)
+
 
 Data_Fruits = [
 
@@ -112,5 +132,143 @@ Data_Fruits = [
     },
     
 ]
+
+Data_Vegetables = [
+     {    #--bean--
+        "name": "Beans (ถั่ว)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/beans.png",
+        "description":"รสชาติของถั่วมีความหลากหลายมาก ขึ้นอยู่กับประเภทของถั่ว, วิธีการปรุงและสายพันธุ์โดยทั่วไปถั่วจะมีรสชาติมัน หวานเล็กน้อย เค็ม"
+    },
     
+      {    #--Bell pepper--
+        "name": "Bell-pepper (พริกหยวก)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Bell-Peppers.jpg",
+        "description":"พริกหยวกมีรสชาติหวาน มีเผ็ดเล็กน้อย ซึ่งระดับความเผ็ดจะแตกต่างกันไปตามสีของพริก โดยพริกหยวกสีเขียวจะเผ็ดที่สุด ส่วนสีเหลือง ส้ม และแดงจะค่อยๆ หวานขึ้นและเผ็ดน้อยลงตามลำดับ"
+    },
     
+      {    #--Bitter gourd--
+        "name": "Bitter Gourd(มะระขี้นก)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/bitter-ground.jpg",
+        "description":"มะระขี้นกมีรสขมจัด ซึ่งเป็นลักษณะเด่นที่ทำให้เป็นสมุนไพรที่มีสรรพคุณทางยา โดยเฉพาะอย่างยิ่งในการช่วยลดระดับน้ำตาลในเลือด"
+    },
+    
+      {    #--Brocoli--
+        "name": "Brocoli (บรอกโคลี)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/brocoli.jpeg",
+        "description":" รสชาติของบรอกโคลีมีลักษณะเฉพาะตัวเป็นรสชาติแบบดินๆ มีความขมเล็กน้อย และเมื่อปรุงสุกแล้วจะให้รสชาติหวานกรอบ นอกจากนี้บรอกโคลียังมีกลิ่นเฉพาะตัวที่ค่อนข้างแรง โดยเฉพาะอย่างยิ่งเมื่อนำมาปรุงให้สุก"
+    },
+    
+      {    #--Cabbage--
+        "name": "Cabbage (กะหล่ำปลี)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Cabbage.jpg",
+        "description":"กะหล่ำปลีมีรสชาติพื้นฐาน หวานกรอบ แต่รสชาติจะแตกต่างกันไปตามสายพันธุ์และวิธีการปรุง โดยกะหล่ำปลีหัวใจจะมีรสหวานกว่ากะหล่ำปลีทั่วไป ส่วนกะหล่ำปลีม่วงอาจมีรสขมกว่ากะหล่ำปลีเขียวเล็กน้อย"
+    },
+    
+      {    #--Carrot--
+        "name": "Carrot (แครอท)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Carrot.jpg",
+        "description":"แครอทมีรสชาติหวาน เป็นหลัก โดยความหวานมาจากน้ำตาลธรรมชาติ เช่น กลูโคส ฟรุกโตส และบางครั้งอาจมีรสขมเล็กน้อย"
+    },
+    
+      {    #--Cauliflower--
+        "name": "Cauliflower (ดอกกะหล่ำ)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Cauliflower.jpg",
+        "description":"ดอกกะหล่ำมีรสชาติค่อนข้างอ่อน กลมกล่อม แทบจะไม่ขัดแย้งกับรสชาติอื่นเลย"
+    },
+    
+      {    #--Cucumber--
+        "name": "Cucumber (แตงกวา)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Cucumber.jpeg",
+        "description":"แตงกวามีรสชาติหวานน้อย กรุบกรอบ และสดชื่น"
+    },
+    
+      {    #--Eggplant--
+        "name": "Eggplant (มะเขือยาว)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Eggplant.jpg",
+        "description":"มะเขือยาวมีรสชาติอ่อนนุ่ม เมื่อปรุงสุกจะอร่อยกลมกล่อม"
+    },
+    
+      {    #--lemon--
+        "name": "lemon (เลมอน)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/lemon.jpg",
+        "description":"เลมอนมีรสชาติ เปรี้ยวอมหวานซึ่งเป็นเอกลักษณ์จากกรดซิตริก แต่โดยรวมแล้วเปรี้ยวจัดกว่ามะนาว แต่จะมีความหวานและกลมกล่อมมากกว่า"
+    },
+    
+      {    #--Onion--
+        "name": "Onion (หอมใหญ่)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Onnion.jfif",
+        "description":"หอมหัวใหญ่มีรสชาติที่แตกต่างกันไปตามการปรุง โดยแบบดิบจะมีรสเผ็ดร้อนและฉุน ในขณะที่หากนำไปปรุงสุกรสชาติจะหวานขึ้นและกลิ่นฉุนจะลดลง"
+    },
+    
+      {    #--Potato--
+        "name": "Potato (มันฝรั่ง)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Potato.jpg",
+        "description":"มันฝรั่งจะมีหลายรสชาติและอยู่ที่การปรุง"
+    },
+    
+      {    #--Zuchini--
+        "name": "AppZuchini (ซูกินี)",
+        "picture":"https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Veggie/Zuchini.jpg",
+        "description":"ซูกินีมีรสชาติจืด ๆ คล้ายแตงกวาแต่มีความหวานกว่าเล็กน้อย และมีเนื้อสัมผัสที่นุ่มนวลเหมือนบวบสามารถทานได้ทั้งแบบสดและปรุง"
+    },
+    
+]
+
+def insert_data():
+    with Session(engine) as session:
+        print("Start Data Insertion/Update...")
+
+        # --- Insert/Update Fruits ---
+        for fruit_data in Data_Fruits:
+            # 1. ค้นหาว่ามี Fruit นี้อยู่แล้วหรือไม่
+            existing_fruit = session.exec(
+                select(Fruit).where(Fruit.name == fruit_data["name"])
+            ).first()
+
+            # 2. ใช้ Pydantic Schema เป็นตัวกรอง (สำคัญในการรับประกันข้อมูลถูกต้อง)
+            validated_data = FruitInput(**fruit_data)
+
+            if existing_fruit:
+                # ถ้ามีอยู่แล้ว ให้อัปเดตค่าที่ต้องการ (เช่น description, picture)
+                existing_fruit.picture = validated_data.picture
+                existing_fruit.description = validated_data.description
+                session.add(existing_fruit) # เพิ่มเข้า session เพื่อให้ commit เปลี่ยนแปลง
+                print(f"   Updated Fruit: {existing_fruit.name}")
+            else:
+                # ถ้ายังไม่มี ให้สร้างใหม่แล้วเพิ่ม
+                new_fruit = Fruit(**validated_data.model_dump())
+                session.add(new_fruit)
+                print(f"   Inserted Fruit: {new_fruit.name}")
+
+        # --- Insert/Update Vegetables ---
+        for veg_data in Data_Vegetables:
+            # 1. ค้นหาว่ามี Vegetable นี้อยู่แล้วหรือไม่
+            existing_veg = session.exec(
+                select(Vegetable).where(Vegetable.name == veg_data["name"])
+            ).first()
+
+            # 2. ใช้ Pydantic Schema เป็นตัวกรอง
+            validated_data = VegetableInput(**veg_data)
+
+            if existing_veg:
+                # ถ้ามีอยู่แล้ว ให้อัปเดตค่าที่ต้องการ
+                existing_veg.picture = validated_data.picture
+                existing_veg.description = validated_data.description
+                session.add(existing_veg) # เพิ่มเข้า session เพื่อให้ commit เปลี่ยนแปลง
+                print(f"   Updated Vegetable: {existing_veg.name}")
+            else:
+                # ถ้ายังไม่มี ให้สร้างใหม่แล้วเพิ่ม
+                new_veg = Vegetable(**validated_data.model_dump())
+                session.add(new_veg)
+                print(f"   Inserted Vegetable: {new_veg.name}")
+
+        try:
+            session.commit()
+            print("\nData Insertion/Update Complete and COMMITTED successfully!")
+        except Exception as e:
+            session.rollback()
+            print(f"\nERROR: Failed to commit data to database: {e}")
+            print("Database changes have been rolled back.")
+
+if __name__ == "__main__":
+    insert_data()
