@@ -7,7 +7,7 @@ from db.models.vegetable_model import Vegetable
 from pydantic import BaseModel
 
 router = APIRouter()
-SessionDep = Annotated[Session , Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]
 
 class SearchResult(BaseModel):
     name: str

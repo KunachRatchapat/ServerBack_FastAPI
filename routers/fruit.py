@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException,Depends, Query, status
-from typing import Annotated , Optional
-from sqlmodel import select , Session
+from typing import Annotated, Optional
+from sqlmodel import select, Session
 from db.models import fruit_model
 from db.database import get_session
 from depencies.dependencies import  get_current_admin_user
@@ -10,7 +10,7 @@ Fruit = fruit_model.Fruit
 
 router = APIRouter()
 
-SessionDep = Annotated[Session , Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]
 AdminUserDep = Annotated[Users, Depends(get_current_admin_user)]
 
 #--เพิ่มผลไม้ (เฉพาะแอดมินนะ)--
@@ -20,7 +20,7 @@ def create_fruit(fruit: Fruit, session:SessionDep, admin:AdminUserDep):
         session.add(fruit)
         session.commit()
         session.refresh(fruit)
-        print("Add Fruit Success" ,fruit.name)
+        print("Add Fruit Success",fruit.name)
         return fruit
     
     except Exception as e:
@@ -73,7 +73,7 @@ def update_fruit(fruit_id:int, admin:AdminUserDep, fruit_update:Fruit, session:S
     
 #---Delete Fruit---
 @router.delete("/fruit/{fruit_id}")
-def delete_fruit(fruit_id:int , session:SessionDep, admin:AdminUserDep):
+def delete_fruit(fruit_id:int, session:SessionDep, admin:AdminUserDep):
     fruit = session.get(Fruit, fruit_id)
     if not fruit:
         raise HTTPException(status_code=404,detail="Fruit not Found")

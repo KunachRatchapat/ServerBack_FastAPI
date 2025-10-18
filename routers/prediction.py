@@ -4,15 +4,15 @@ import io
 import pickle
 from PIL import Image
 from img2vec_pytorch import Img2Vec
-import numpy as np
+
 
 router = APIRouter()
 rf_model =None
 img2vec_model = None
 class_name = []
 
-MODEL_PATH = 'ai_model/tomato.p'
-LABELS_PATH = 'ai_model/tomato_labels.txt'
+MODEL_PATH = 'ai_model/my_food_classifier_rf.pkl'
+LABELS_PATH = 'ai_model/my_food_classifier_labels.txt'
 
 @router.on_event("startup")
 async def load_models_on_startup():
@@ -24,10 +24,11 @@ async def load_models_on_startup():
             rf_model = pickle.load(f)
             
         img2vec_model = Img2Vec(cuda=False)
+        
+        
         # --- โหลด Class Names (Labels) ---
         if not os.path.exists(LABELS_PATH):
-            raise FileNotFoundError(f"Labels Filde not found at:{LABELS_PATH}")
-        
+            raise FileNotFoundError(f"Labels Filde not found at:{LABELS_PATH}") 
         with open(LABELS_PATH,'r',encoding='utf-8') as f:
             
             class_names = [line.strip() for line in f.readlines()]
@@ -46,6 +47,7 @@ async def predict_image(file: UploadFile =  File(...)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="AI models are not ready. Server failed to load resources.!")
     
     contents = await file.read() 
+    
     try:
         img = Image.open(io.BytesIO(contents)).convert('RGB')
     except Exception:

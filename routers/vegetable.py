@@ -5,6 +5,7 @@ from db.models import vegetable_model
 from db.database import get_session
 from db.models.user_model import Users
 from depencies.dependencies import get_current_admin_user
+from schema.vegetable_schema import VegetableUpdate
 
 Vegetable =  vegetable_model.Vegetable
 
@@ -60,6 +61,7 @@ def update_vegetable(vegetable_id:int, admin:AdminUserDep, vegetable_update:Vege
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fruit Not Found !!")
     
     update_fruit =  vegetable_update.model_dump(exclude_unset=True)
+    
     for key, value in update_fruit.items():
         setattr(vegetable, key, value)
         

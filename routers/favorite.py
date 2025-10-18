@@ -1,19 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends, Query, Body
-from typing import Annotated , Optional , List 
+from typing import Annotated, Optional, List
 from sqlmodel import select, Session
-from db.models import favorite_model , fruit_model , vegetable_model 
+from db.models import favorite_model, fruit_model, vegetable_model 
 from db.database import get_session
 from pydantic import BaseModel
 from schema.favorite_schema import FavoriteCreate,FavoriteRespone,FavoriteItemRespone
 from fastapi.responses import JSONResponse
-
-#--Call Class Models--
-Favorite = favorite_model.Favorite
-Vegetable = vegetable_model.Vegetable
-Fruit = fruit_model.Fruit
+from db.models.favorite_model import Favorite
+from db.models.vegetable_model import Vegetable
+from db.models.fruit_model import Fruit
 
 router = APIRouter()
-SessionDep = Annotated[Session , Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]
 
 
 #---Add Favorite---
