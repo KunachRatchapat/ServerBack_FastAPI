@@ -1,20 +1,20 @@
-from sqlmodel import SQLModel, create_engine, Session
 import os
 from dotenv import load_dotenv
+from sqlmodel import SQLModel, create_engine, Session
 
 
 load_dotenv()
 
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_DB = os.getenv("POSTGRES_DB")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT")
+DB_HOST = os.getenv("DB_HOST")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_USER = os.getenv("DB_USER")
+DB_NAME = os.getenv("DB_NAME")
+DB_PORT = os.getenv("DB_PORT")
 
-
-DATABASE_URL = (   f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}"
-                    f"@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
- )
+DATABASE_URL = (
+    f"postgresql://{DB_USER}:{DB_PASSWORD}"
+    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
 
 engine = create_engine(DATABASE_URL)
@@ -22,13 +22,12 @@ engine = create_engine(DATABASE_URL)
 
 # ฟังก์ชันสร้างตาราง
 def create_db_and_tables():
+    
     from db.models import vegetable_model, user_model, favorite_model, fruit_model
-    SQLModel.metadata.create_all(bind=engine)
+    SQLModel.metadata.create_all(bind=engine) 
 
 
 # ฟังก์ชัน Session
 def get_session():
-    with Session(engine) as session:
+    with Session(engine) as session: 
         yield session
-        
-

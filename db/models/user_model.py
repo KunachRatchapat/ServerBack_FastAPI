@@ -19,5 +19,5 @@ class Users(SQLModel, table=True): # เปลี่ยนชื่อคลา�
     updateat: Optional[datetime] = Field(default=None, nullable=True)
 
     # Relationship 1 to M
-    # แก้ไข: ใช้ "Favorite" (เป็น String) ใน Relationship
+
     favorites: List["Favorite"] = Relationship(back_populates="user")

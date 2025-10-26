@@ -18,5 +18,5 @@ class UsersRepo(BaseRepo):
     
 
     @staticmethod
-    def find_by_name(db: Session, name: str) -> Optional[Users]:
+    def find_by_username(db: Session, name: str) -> Optional[Users]:
         return db.exec(select(Users).where(Users.username == name)).first()

@@ -3,7 +3,7 @@ from sqlmodel import Field, SQLModel , Relationship
 from datetime import datetime 
 
 
-# ป้องกัน Circular Import: ใช้ TYPE_CHECKING สำหรับการอ้างอิง Favorite
+
 if TYPE_CHECKING:
     from .favorite_model import Favorite
 
