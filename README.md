@@ -1,4 +1,4 @@
-รับทราบครับคุณลูกค้า! นี่คือ `README.md` ที่ปรับปรุงตามที่คุณต้องการ โดยเน้นเนื้อหาที่คุณให้มาเป็นหลัก และจัดรูปแบบ Markdown ให้สวยงามครับ
+
 
 ---
 
@@ -10,7 +10,7 @@
 
 ## 🚀 Overview
 
-This backend system is a core component of a final-year project designed to **detect and classify various fruits and vegetables from images**. Leveraging the power of **YOLOv8** for accurate object detection and classification, the backend seamlessly handles image uploads, processes the detection results, and stores crucial data such as food type, nutritional information, and other relevant metadata in a robust database powered by **SQLModel**.
+This backend system is a core component of a final-year project designed to **detect and classify various fruits and vegetables from images**. Leveraging the power of classification, the backend seamlessly handles image uploads, processes the detection results, and stores crucial data such as food type, nutritional information, and other relevant metadata in a robust database powered by **SQLModel**.
 
 It serves as the central hub for our mobile application, providing APIs for image processing, user authentication, managing favorite food items, and retrieving detailed information about each produce.
 
