@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+.env
+dev.db
+test.db
+.git
+.gitignore
+README.md
+.mypy_cache
+.pytest_cache
+.ruff_cache
+ai_model/

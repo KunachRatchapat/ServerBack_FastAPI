@@ -1,0 +1,31 @@
+[project]
+name = "serverback-fastapi"
+version = "1.1.0"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "alembic.*",
+    "passlib.*",
+    "jose.*",
+    "sqlmodel.*",
+    "sqlalchemy.*",
+    "pydantic.*",
+    "pydantic_settings.*",
+    "img2vec_pytorch.*",
+]
+ignore_missing_imports = true
