@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
 from typing import Generic, Optional, Protocol, TypeVar
 
-from sqlmodel import Session, SQLModel, select
+from sqlmodel import Session, SQLModel, func, select
+
+from app.config import settings
 
 ModelT = TypeVar("ModelT", bound=SQLModel)
 
@@ -36,16 +38,18 @@ class SQLModelRepository(Generic[ModelT]):
             return None
         return obj
 
-    def list(self, db: Session, offset: int = 0, limit: int = 100) -> list[ModelT]:
+    def list(
+        self, db: Session, offset: int = 0, limit: int = settings.DEFAULT_LIST_LIMIT
+    ) -> list[ModelT]:
         stmt = select(self._model)
         stmt = self._exclude_deleted(stmt)
         stmt = stmt.offset(offset).limit(limit)
         return db.exec(stmt).all()
 
     def count(self, db: Session) -> int:
-        stmt = select(self._model)
+        stmt = select(func.count()).select_from(self._model)
         stmt = self._exclude_deleted(stmt)
-        return len(db.exec(stmt).all())
+        return db.exec(stmt).one()
 
     def create(self, db: Session, data: ModelT) -> ModelT:
         if hasattr(data, "createat") and getattr(data, "createat") is None:

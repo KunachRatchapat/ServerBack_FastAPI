@@ -16,10 +16,12 @@ def search(
     keyword: str = Query(..., description="Search fruits and vegetables by name"),
 ):
     fruits = db.exec(
-        select(Fruit).where(col(Fruit.name).ilike(f"%{keyword}%"))
+        select(Fruit)
+        .where(col(Fruit.name).ilike(f"%{keyword}%"), Fruit.deleteat.is_(None))
     ).all()
     vegs = db.exec(
-        select(Vegetable).where(col(Vegetable.name).ilike(f"%{keyword}%"))
+        select(Vegetable)
+        .where(col(Vegetable.name).ilike(f"%{keyword}%"), Vegetable.deleteat.is_(None))
     ).all()
     results = [{"name": f.name} for f in fruits] + [{"name": v.name} for v in vegs]
     return success_response(results)

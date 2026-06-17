@@ -113,6 +113,39 @@ def test_update_nutrition(client, db, admin_headers):
     assert r.json()["result"]["calories"] == 999
 
 
+def test_create_nutrition_requires_one_target(client, admin_headers):
+    r = client.post(
+        "/api/v1/nutrition/",
+        headers=admin_headers,
+        json={"calories": 100},
+    )
+    assert r.status_code == 422
+
+
+def test_create_nutrition_rejects_both_targets(client, db, admin_headers):
+    fruit_id = _create_fruit(db)
+    veg_id = _create_vegetable(db)
+    r = client.post(
+        "/api/v1/nutrition/",
+        headers=admin_headers,
+        json={"fruit_id": fruit_id, "vegetable_id": veg_id, "calories": 100},
+    )
+    assert r.status_code == 422
+
+
+def test_get_nutrition_by_fruit_excludes_deleted(client, db, admin_headers):
+    fruit_id = _create_fruit(db)
+    r = client.post(
+        "/api/v1/nutrition/",
+        headers=admin_headers,
+        json={"fruit_id": fruit_id, "calories": 200},
+    )
+    nid = r.json()["result"]["id"]
+    client.delete(f"/api/v1/nutrition/{nid}", headers=admin_headers)
+    r = client.get(f"/api/v1/nutrition/fruit/{fruit_id}")
+    assert r.status_code == 404
+
+
 def test_delete_nutrition(client, db, admin_headers):
     fruit_id = _create_fruit(db)
     r = client.post(

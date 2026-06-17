@@ -5,6 +5,6 @@ from app.config import settings
 
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["60/minute"],
+    default_limits=[settings.RATE_LIMIT],
     enabled=settings.ENV == "production",
 )

@@ -2,8 +2,10 @@ import re
 
 from fastapi import HTTPException, status
 
-MIN_LENGTH = 8
-MAX_LENGTH = 128
+from app.config import settings
+
+MIN_LENGTH = settings.PASSWORD_MIN_LENGTH
+MAX_LENGTH = settings.PASSWORD_MAX_LENGTH
 
 
 def validate_password(password: str) -> None:

@@ -1,8 +1,13 @@
+from typing import cast
+
+from fastapi import HTTPException, status
 from sqlmodel import Session
 
 from app.domains.favorite.repository import FavoriteRepository
 from app.domains.favorite.schemas import FavoriteItemResponse, FavoriteToggle
 from db.models.favorite_model import Favorite
+from db.models.fruit_model import Fruit
+from db.models.vegetable_model import Vegetable
 
 
 class FavoriteService:
@@ -10,12 +15,16 @@ class FavoriteService:
         self.repo = FavoriteRepository()
 
     def toggle(self, db: Session, user_id: int, data: FavoriteToggle) -> dict:
+        if data.fruit_id is not None and db.get(Fruit, data.fruit_id) is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Fruit not found")
+        if data.vegetable_id is not None and db.get(Vegetable, data.vegetable_id) is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Vegetable not found")
+
         existing = self.repo.find_by_user_and_item(
             db, user_id, data.vegetable_id, data.fruit_id
         )
         if existing:
-            db.delete(existing)
-            db.commit()
+            self.repo.delete(db, cast(int, existing.id))
             return {"message": "Unfavorite Success"}
 
         fav = Favorite(

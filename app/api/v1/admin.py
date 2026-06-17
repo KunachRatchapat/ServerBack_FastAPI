@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.deps import AdminUserDep, SessionDep
 from app.core.response import success_response
@@ -20,13 +20,14 @@ AdminServiceDep = Annotated[AdminService, Depends(get_admin_service)]
 
 @router.get("/users")
 def list_users(
+    request: Request,
     db: SessionDep,
     service: AdminServiceDep,
     admin: AdminUserDep,
     page: int = Query(1, ge=1),
     size: int = Query(10, ge=1, le=100),
 ):
-    result = service.paginate(db, page, size, "/api/v1/admin/users")
+    result = service.paginate(db, page, size, request.url.path)
     return success_response(result)
 
 
@@ -53,8 +54,9 @@ def get_stats(
     return success_response(stats)
 
 
-@router.delete("/users/{user_id}", status_code=204)
+@router.delete("/users/{user_id}")
 def delete_user(
     db: SessionDep, service: AdminServiceDep, admin: AdminUserDep, user_id: int,
 ):
     service.delete_user(db, user_id)
+    return success_response(message="User deleted")

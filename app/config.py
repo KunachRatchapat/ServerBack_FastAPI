@@ -25,6 +25,27 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     CORS_ORIGINS: str = "http://localhost:8000,http://127.0.0.1:8000"
 
+    # ML
+    ML_MODEL_PATH: str = "ai_model/my_food_classifier_rf.pkl"
+    ML_LABELS_PATH: str = "ai_model/my_food_classifier_labels.txt"
+
+    # Storage
+    MAX_UPLOAD_SIZE: int = 5 * 1024 * 1024
+    THUMBNAIL_WIDTH: int = 300
+    THUMBNAIL_HEIGHT: int = 300
+    ALLOWED_EXTENSIONS: str = ".jpg,.jpeg,.png,.webp,.gif"
+
+    # Rate limit
+    RATE_LIMIT: str = "60/minute"
+
+    # Password policy
+    PASSWORD_MIN_LENGTH: int = 8
+    PASSWORD_MAX_LENGTH: int = 128
+
+    # Pagination
+    DEFAULT_PAGE_SIZE: int = 10
+    DEFAULT_LIST_LIMIT: int = 100
+
     @property
     def database_url(self) -> str:
         if self.DB_URL:
@@ -45,6 +66,14 @@ class Settings(BaseSettings):
         if self.CORS_ORIGINS == "*":
             return ["*"]
         return [o.strip() for o in self.CORS_ORIGINS.split(",")]
+
+    @property
+    def thumbnail_size(self) -> tuple[int, int]:
+        return (self.THUMBNAIL_WIDTH, self.THUMBNAIL_HEIGHT)
+
+    @property
+    def allowed_extensions_set(self) -> set[str]:
+        return {e.strip() for e in self.ALLOWED_EXTENSIONS.split(",")}
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

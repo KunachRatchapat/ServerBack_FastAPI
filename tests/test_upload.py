@@ -22,6 +22,7 @@ def cleanup_uploads():
     import shutil as _shutil
 
     from app.core.storage import UPLOAD_DIR as _UPLOAD_DIR
+
     if _UPLOAD_DIR.exists():
         _shutil.rmtree(_UPLOAD_DIR)
 
@@ -59,3 +60,20 @@ def test_upload_invalid_extension(client, admin_headers):
         files={"file": ("test.txt", b"hello", "text/plain")},
     )
     assert r.status_code == 400
+
+
+def test_get_upload_path_traversal_rejected(client):
+    for malicious in ("../pyproject.toml", "..\\pyproject.toml", "foo/../../pyproject.toml"):
+        r = client.get(f"/api/v1/upload/{malicious}")
+        assert r.status_code == 404, malicious
+
+
+def test_get_file_path_rejects_path_separators():
+    from fastapi import HTTPException
+
+    from app.core.storage import get_file_path
+
+    for bad in ("../secret", "a/b.png", "a\\b.png", ""):
+        with pytest.raises(HTTPException) as exc:
+            get_file_path(bad)
+        assert exc.value.status_code == 404

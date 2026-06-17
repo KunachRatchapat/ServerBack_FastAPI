@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from sqlalchemy import text
@@ -20,7 +20,7 @@ from app.ml.service import ml_service
 
 
 def run_migrations():
-    alembic_cfg = Config("alembic.ini")
+    alembic_cfg = Config(Path(__file__).resolve().parent.parent / "alembic.ini")
     alembic_cfg.set_main_option("script_location", "app/database/migrations")
     command.upgrade(alembic_cfg, "head")
 
@@ -41,13 +41,7 @@ app = FastAPI(
 )
 
 app.state.limiter = limiter
-
-
-def rate_limit_handler(request: Request, exc: Exception) -> Response:
-    return _rate_limit_exceeded_handler(request, exc)  # type: ignore[arg-type]
-
-
-app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
 app.add_middleware(
     CORSMiddleware,

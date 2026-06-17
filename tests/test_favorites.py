@@ -56,6 +56,25 @@ def test_list_favorites(client, admin_headers, user_headers):
     assert items[0]["item_name"] == "Cherry"
 
 
+def test_toggle_favorite_rejects_both_ids(client, admin_headers, user_headers):
+    fruit = client.post(
+        "/api/v1/fruits/",
+        json={"name": "Durian", "picture": "durian.jpg", "description": "Strong"},
+        headers=admin_headers,
+    )
+    veg = client.post(
+        "/api/v1/vegetables/",
+        json={"name": "Kale", "picture": "kale.jpg", "description": "Green"},
+        headers=admin_headers,
+    )
+    r = client.post(
+        "/api/v1/favorites/toggle",
+        json={"fruit_id": fruit.json()["result"]["id"], "vegetable_id": veg.json()["result"]["id"]},
+        headers=user_headers,
+    )
+    assert r.status_code == 422
+
+
 def test_list_favorites_requires_auth(client):
     r = client.get("/api/v1/favorites/")
     assert r.status_code == 401

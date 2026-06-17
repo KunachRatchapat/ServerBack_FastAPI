@@ -35,8 +35,10 @@ def test_delete_user(client, admin_headers):
     r = client.post(
         "/api/v1/auth/register",
         json={
-            "username": "tempdel", "password": "Pass1234",
-            "email": "tempdel@test.com", "surname": "Del",
+            "username": "tempdel",
+            "password": "Pass1234",
+            "email": "tempdel@test.com",
+            "surname": "Del",
         },
     )
     uid = r.json()["result"]["id"]
@@ -44,8 +46,24 @@ def test_delete_user(client, admin_headers):
     assert r2.status_code == 204
 
 
+def test_admin_stats_excludes_soft_deleted(client, admin_headers, db):
+    from sqlmodel import select
+
+    from db.models.fruit_model import Fruit
+
+    db.add(Fruit(name="Stats Del Fruit", picture="p.jpg", description="d"))
+    db.commit()
+    before = client.get("/api/v1/admin/stats", headers=admin_headers).json()["result"]["fruits"]
+    fruit = db.exec(select(Fruit).where(Fruit.name == "Stats Del Fruit")).first()
+    assert fruit is not None
+    client.delete(f"/api/v1/fruits/{fruit.id}", headers=admin_headers)
+    after = client.get("/api/v1/admin/stats", headers=admin_headers).json()["result"]["fruits"]
+    assert after == before - 1
+
+
 def test_admin_stats(client, admin_headers, db):
     from db.models.fruit_model import Fruit
+
     db.add(Fruit(name="Stats Fruit", picture="p.jpg", description="d"))
     db.commit()
     r = client.get("/api/v1/admin/stats", headers=admin_headers)

@@ -19,6 +19,7 @@ class FavoriteRepository(SQLModelRepository[Favorite]):
             stmt = stmt.where(Favorite.vegetable_id == vegetable_id)
         if fruit_id:
             stmt = stmt.where(Favorite.fruit_id == fruit_id)
+        stmt = self._exclude_deleted(stmt)
         return db.exec(stmt).first()
 
     def find_by_user_with_items(self, db: Session, user_id: int) -> list[Favorite]:
@@ -27,4 +28,5 @@ class FavoriteRepository(SQLModelRepository[Favorite]):
             .where(Favorite.users_id == user_id)
             .options(selectinload(Favorite.vegetable), selectinload(Favorite.fruit))
         )
+        stmt = self._exclude_deleted(stmt)
         return db.exec(stmt).all()

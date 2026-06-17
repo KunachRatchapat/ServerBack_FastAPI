@@ -6,8 +6,10 @@ from typing import Any
 from fastapi import UploadFile
 from PIL import Image
 
-MODEL_PATH = "ai_model/my_food_classifier_rf.pkl"
-LABELS_PATH = "ai_model/my_food_classifier_labels.txt"
+from app.config import settings
+
+MODEL_PATH = settings.ML_MODEL_PATH
+LABELS_PATH = settings.ML_LABELS_PATH
 
 
 class MLService:

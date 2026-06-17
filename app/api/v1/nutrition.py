@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.deps import AdminUserDep, SessionDep
 from app.core.response import created_response, success_response
-from app.domains.nutrition.schemas import NutritionCreate, NutritionUpdate
+from app.domains.nutrition.schemas import NutritionCreate, NutritionResponse, NutritionUpdate
 from app.domains.nutrition.service import NutritionService
 
 router = APIRouter(prefix="/nutrition", tags=["Nutrition"])
@@ -19,19 +19,20 @@ NutritionServiceDep = Annotated[NutritionService, Depends(get_nutrition_service)
 
 @router.get("/")
 def list_nutrition(
+    request: Request,
     db: SessionDep,
     service: NutritionServiceDep,
     page: int = Query(1, ge=1),
     size: int = Query(10, ge=1, le=100),
 ):
-    result = service.paginate(db, page, size, "/api/v1/nutrition/")
+    result = service.paginate(db, page, size, request.url.path)
     return success_response(result)
 
 
 @router.get("/{nutrition_id}")
 def get_nutrition(db: SessionDep, service: NutritionServiceDep, nutrition_id: int):
     obj = service.get(db, nutrition_id)
-    return success_response(obj)
+    return success_response(NutritionResponse.model_validate(obj))
 
 
 @router.get("/fruit/{fruit_id}")
@@ -56,7 +57,7 @@ def create_nutrition(
     data: NutritionCreate,
 ):
     obj = service.create(db, data)
-    return created_response(obj)
+    return created_response(NutritionResponse.model_validate(obj))
 
 
 @router.put("/{nutrition_id}")
@@ -68,7 +69,7 @@ def update_nutrition(
     data: NutritionUpdate,
 ):
     obj = service.update(db, nutrition_id, data)
-    return success_response(obj)
+    return success_response(NutritionResponse.model_validate(obj))
 
 
 @router.delete("/{nutrition_id}", status_code=204)

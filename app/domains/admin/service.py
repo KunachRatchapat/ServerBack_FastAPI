@@ -15,9 +15,6 @@ class AdminService:
     def __init__(self) -> None:
         self.repo = UserRepository()
 
-    def list_users(self, db: Session) -> list[Users]:
-        return db.exec(select(Users)).all()
-
     def paginate(
         self, db: Session, page: int = 1, size: int = 10, base_path: str = ""
     ) -> PaginatedResult:
@@ -39,11 +36,15 @@ class AdminService:
         if not self.repo.delete(db, user_id):
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
 
+    def _count_active(self, db: Session, model: type) -> int:
+        stmt = select(func.count()).select_from(model).where(model.deleteat.is_(None))
+        return db.exec(stmt).one()
+
     def get_stats(self, db: Session) -> dict:
         return {
-            "users": db.exec(select(func.count()).select_from(Users)).one(),
-            "fruits": db.exec(select(func.count()).select_from(Fruit)).one(),
-            "vegetables": db.exec(select(func.count()).select_from(Vegetable)).one(),
-            "favorites": db.exec(select(func.count()).select_from(Favorite)).one(),
-            "nutrition_records": db.exec(select(func.count()).select_from(Nutrition)).one(),
+            "users": self._count_active(db, Users),
+            "fruits": self._count_active(db, Fruit),
+            "vegetables": self._count_active(db, Vegetable),
+            "favorites": self._count_active(db, Favorite),
+            "nutrition_records": self._count_active(db, Nutrition),
         }

@@ -12,8 +12,10 @@ class NutritionRepository(SQLModelRepository[Nutrition]):
 
     def find_by_fruit(self, db: Session, fruit_id: int) -> Optional[Nutrition]:
         stmt = select(Nutrition).where(Nutrition.fruit_id == fruit_id)
+        stmt = self._exclude_deleted(stmt)
         return db.exec(stmt).first()
 
     def find_by_vegetable(self, db: Session, vegetable_id: int) -> Optional[Nutrition]:
         stmt = select(Nutrition).where(Nutrition.vegetable_id == vegetable_id)
+        stmt = self._exclude_deleted(stmt)
         return db.exec(stmt).first()

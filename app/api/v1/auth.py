@@ -1,8 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from app.api.deps import CurrentUserDep, SessionDep
+from app.config import settings
+from app.core.rate_limit import limiter
 from app.core.response import created_response, success_response
 from app.domains.auth.schemas import (
     ChangePasswordRequest,
@@ -28,7 +30,8 @@ AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
 
 
 @router.post("/register", status_code=201)
-def register(db: SessionDep, service: AuthServiceDep, data: Register):
+@limiter.limit(settings.RATE_LIMIT)
+def register(request: Request, db: SessionDep, service: AuthServiceDep, data: Register):
     user = service.register(db, data)
     return created_response(UserResponse.model_validate(user), "User created successfully")
 
@@ -40,19 +43,24 @@ def verify_email(db: SessionDep, service: AuthServiceDep, data: VerifyEmailReque
 
 
 @router.post("/login")
-def login(db: SessionDep, service: AuthServiceDep, data: Login):
+@limiter.limit(settings.RATE_LIMIT)
+def login(request: Request, db: SessionDep, service: AuthServiceDep, data: Login):
     token = service.login(db, data)
     return success_response(token, "Login successful")
 
 
 @router.post("/refresh")
-def refresh(service: AuthServiceDep, data: RefreshRequest):
-    token = service.refresh(data)
+@limiter.limit(settings.RATE_LIMIT)
+def refresh(request: Request, db: SessionDep, service: AuthServiceDep, data: RefreshRequest):
+    token = service.refresh(db, data)
     return success_response(token, "Token refreshed")
 
 
 @router.post("/forgot-password")
-def forgot_password(db: SessionDep, service: AuthServiceDep, data: ForgotPasswordRequest):
+@limiter.limit(settings.RATE_LIMIT)
+def forgot_password(
+    request: Request, db: SessionDep, service: AuthServiceDep, data: ForgotPasswordRequest,
+):
     service.forgot_password(db, data)
     return success_response(message="If the email exists, a reset link has been sent")
 

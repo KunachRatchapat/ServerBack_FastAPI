@@ -1,6 +1,8 @@
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 
+from app.core.logging_conf import logger
+
 
 class NotFoundError(HTTPException):
     def __init__(self, detail: str = "Resource not found"):
@@ -28,6 +30,7 @@ class ValidationError(HTTPException):
 
 
 async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled exception at %s %s", request.method, request.url.path)
     return JSONResponse(
         status_code=500,
         content={

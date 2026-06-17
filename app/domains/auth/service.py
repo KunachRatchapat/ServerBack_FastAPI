@@ -6,6 +6,7 @@ from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
 from app.config import settings
+from app.core.logging_conf import logger
 from app.core.security import (
     create_refresh_token,
     create_token,
@@ -49,7 +50,7 @@ class AuthService:
         )
         created = self.repo.create(db, user)
         link = f"{settings.VERIFY_REDIRECT_URL}/api/v1/auth/verify-email?token={verify_token}"
-        print(f"[DEV] Verify email: {link}")
+        logger.info("Verify email: %s", link)
         return created
 
     def login(self, db: Session, data: Login) -> TokenResponse:
@@ -63,11 +64,19 @@ class AuthService:
         refresh = create_refresh_token(data=payload)
         return TokenResponse(access_token=access, refresh_token=refresh)
 
-    def refresh(self, data: RefreshRequest) -> TokenResponse:
+    def refresh(self, db: Session, data: RefreshRequest) -> TokenResponse:
         payload = decode_token(data.refresh_token)
         if not payload or payload.get("type") != "refresh":
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
-        user_payload = {"sub": payload["sub"], "role": payload.get("role", "user")}
+        email = payload.get("sub")
+        if not email:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        user = self.repo.find_by_email(db, email)
+        if not user:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        if not user.is_verified:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Email not verified")
+        user_payload = {"sub": user.email, "role": user.role}
         access = create_token(data=user_payload)
         refresh = create_refresh_token(data=user_payload)
         return TokenResponse(access_token=access, refresh_token=refresh)
@@ -111,7 +120,7 @@ class AuthService:
             "reset_token_expires": expires,
         })
         link = f"{settings.VERIFY_REDIRECT_URL}/api/v1/auth/reset-password?token={token}"
-        print(f"[DEV] Reset password: {link}")
+        logger.info("Reset password: %s", link)
 
     def reset_password(self, db: Session, data: ResetPasswordRequest) -> None:
         validate_password(data.new_password)

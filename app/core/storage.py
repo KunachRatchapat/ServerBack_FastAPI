@@ -5,10 +5,11 @@ from fastapi import HTTPException, UploadFile, status
 from PIL import Image
 
 from app.config import settings
+from app.core.logging_conf import logger
 
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
-MAX_FILE_SIZE = 5 * 1024 * 1024
-THUMBNAIL_SIZE = (300, 300)
+ALLOWED_EXTENSIONS = settings.allowed_extensions_set
+MAX_FILE_SIZE = settings.MAX_UPLOAD_SIZE
+THUMBNAIL_SIZE = settings.thumbnail_size
 UPLOAD_DIR = Path(settings.UPLOAD_DIR)
 
 
@@ -60,11 +61,20 @@ def create_thumbnail(filepath: Path) -> None:
         img.thumbnail(THUMBNAIL_SIZE)
         img.save(thumb_path)
     except Exception:
-        pass
+        logger.warning("Failed to create thumbnail for %s", filepath.name)
 
 
 def get_file_path(filename: str) -> Path:
-    full = UPLOAD_DIR / filename
-    if not full.exists() or not full.is_file():
+    if not filename or Path(filename).name != filename:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="File not found")
+
+    upload_root = UPLOAD_DIR.resolve()
+    full = (upload_root / filename).resolve()
+    try:
+        full.relative_to(upload_root)
+    except ValueError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="File not found")
+
+    if not full.is_file():
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="File not found")
     return full

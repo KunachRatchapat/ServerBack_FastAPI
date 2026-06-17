@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.deps import AdminUserDep, SessionDep
 from app.core.response import created_response, success_response
@@ -19,12 +19,13 @@ VegetableServiceDep = Annotated[VegetableService, Depends(get_vegetable_service)
 
 @router.get("/")
 def list_vegetables(
+    request: Request,
     db: SessionDep,
     service: VegetableServiceDep,
     page: int = Query(1, ge=1),
     size: int = Query(10, ge=1, le=100),
 ):
-    result = service.paginate(db, page, size, "/api/v1/vegetables/")
+    result = service.paginate(db, page, size, request.url.path)
     return success_response(result)
 
 

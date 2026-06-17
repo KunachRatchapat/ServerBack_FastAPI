@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 
 class NutritionCreate(BaseModel):
@@ -12,6 +12,14 @@ class NutritionCreate(BaseModel):
     carbs: Optional[float] = None
     fat: Optional[float] = None
     fiber: Optional[float] = None
+
+    @model_validator(mode="after")
+    def check_exactly_one_target(self):
+        has_fruit = self.fruit_id is not None
+        has_vegetable = self.vegetable_id is not None
+        if has_fruit == has_vegetable:
+            raise ValueError("Exactly one of fruit_id or vegetable_id must be provided")
+        return self
 
 
 class NutritionUpdate(BaseModel):

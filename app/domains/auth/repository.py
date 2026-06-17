@@ -11,4 +11,6 @@ class UserRepository(SQLModelRepository[Users]):
         super().__init__(Users)
 
     def find_by_email(self, db: Session, email: str) -> Optional[Users]:
-        return db.exec(select(Users).where(Users.email == email)).first()
+        stmt = select(Users).where(Users.email == email)
+        stmt = self._exclude_deleted(stmt)
+        return db.exec(stmt).first()
