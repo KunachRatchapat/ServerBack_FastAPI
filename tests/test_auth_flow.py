@@ -96,7 +96,7 @@ def test_soft_deleted_user_cannot_login(client, db, admin_headers, user_headers)
     user = db.exec(select(Users).where(Users.email == "user@test.com")).first()
     assert user is not None
     r = client.delete(f"/api/v1/admin/users/{user.id}", headers=admin_headers)
-    assert r.status_code == 200
+    assert r.status_code == 204
     r = client.post(
         "/api/v1/auth/login",
         json={"email": "user@test.com", "password": "user123"},
@@ -110,7 +110,7 @@ def test_soft_deleted_user_token_rejected(client, db, admin_headers, user_header
     r = client.get("/api/v1/favorites/", headers=user_headers)
     assert r.status_code == 200
     r = client.delete(f"/api/v1/admin/users/{user.id}", headers=admin_headers)
-    assert r.status_code == 200
+    assert r.status_code == 204
     r = client.get("/api/v1/favorites/", headers=user_headers)
     assert r.status_code == 401
 

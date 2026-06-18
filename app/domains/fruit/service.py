@@ -1,6 +1,6 @@
-from fastapi import HTTPException
 from sqlmodel import Session
 
+from app.core.exceptions import NotFoundError
 from app.core.pagination import PaginatedResult, paginate
 from app.domains.fruit.repository import FruitRepository
 from app.domains.fruit.schemas import FruitCreate, FruitUpdate
@@ -24,7 +24,7 @@ class FruitService:
     def get(self, db: Session, fruit_id: int) -> Fruit:
         fruit = self.repo.get(db, fruit_id)
         if not fruit:
-            raise HTTPException(status_code=404, detail="Fruit not found")
+            raise NotFoundError("Fruit not found")
         return fruit
 
     def create(self, db: Session, data: FruitCreate) -> Fruit:
@@ -34,9 +34,9 @@ class FruitService:
     def update(self, db: Session, fruit_id: int, data: FruitUpdate) -> Fruit:
         updated = self.repo.update(db, fruit_id, data.model_dump(exclude_unset=True))
         if not updated:
-            raise HTTPException(status_code=404, detail="Fruit not found")
+            raise NotFoundError("Fruit not found")
         return updated
 
     def delete(self, db: Session, fruit_id: int) -> None:
         if not self.repo.delete(db, fruit_id):
-            raise HTTPException(status_code=404, detail="Fruit not found")
+            raise NotFoundError("Fruit not found")

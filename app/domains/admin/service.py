@@ -1,6 +1,6 @@
-from fastapi import HTTPException, status
 from sqlmodel import Session, func, select
 
+from app.core.exceptions import NotFoundError
 from app.core.pagination import PaginatedResult, paginate
 from app.domains.admin.schemas import UserUpdate
 from app.domains.auth.repository import UserRepository
@@ -23,18 +23,18 @@ class AdminService:
     def get_user(self, db: Session, user_id: int) -> Users:
         user = self.repo.get(db, user_id)
         if not user:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise NotFoundError("User not found")
         return user
 
     def update_user(self, db: Session, user_id: int, data: UserUpdate) -> Users:
         updated = self.repo.update(db, user_id, data.model_dump(exclude_unset=True))
         if not updated:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise NotFoundError("User not found")
         return updated
 
     def delete_user(self, db: Session, user_id: int) -> None:
         if not self.repo.delete(db, user_id):
-            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise NotFoundError("User not found")
 
     def _count_active(self, db: Session, model: type) -> int:
         stmt = select(func.count()).select_from(model).where(model.deleteat.is_(None))

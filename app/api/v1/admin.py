@@ -39,8 +39,11 @@ def get_user(db: SessionDep, service: AdminServiceDep, admin: AdminUserDep, user
 
 @router.put("/users/{user_id}")
 def update_user(
-    db: SessionDep, service: AdminServiceDep, admin: AdminUserDep,
-    user_id: int, data: UserUpdate,
+    db: SessionDep,
+    service: AdminServiceDep,
+    admin: AdminUserDep,
+    user_id: int,
+    data: UserUpdate,
 ):
     user = service.update_user(db, user_id, data)
     return success_response(UserResponse.model_validate(user))
@@ -48,15 +51,19 @@ def update_user(
 
 @router.get("/stats")
 def get_stats(
-    db: SessionDep, service: AdminServiceDep, admin: AdminUserDep,
+    db: SessionDep,
+    service: AdminServiceDep,
+    admin: AdminUserDep,
 ):
     stats = service.get_stats(db)
     return success_response(stats)
 
 
-@router.delete("/users/{user_id}")
+@router.delete("/users/{user_id}", status_code=204)
 def delete_user(
-    db: SessionDep, service: AdminServiceDep, admin: AdminUserDep, user_id: int,
+    db: SessionDep,
+    service: AdminServiceDep,
+    admin: AdminUserDep,
+    user_id: int,
 ):
     service.delete_user(db, user_id)
-    return success_response(message="User deleted")
