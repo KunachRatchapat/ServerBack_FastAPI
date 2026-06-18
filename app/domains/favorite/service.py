@@ -1,8 +1,8 @@
 from typing import cast
 
-from fastapi import HTTPException, status
 from sqlmodel import Session
 
+from app.core.exceptions import NotFoundError
 from app.domains.favorite.repository import FavoriteRepository
 from app.domains.favorite.schemas import FavoriteItemResponse, FavoriteToggle
 from db.models.favorite_model import Favorite
@@ -16,9 +16,9 @@ class FavoriteService:
 
     def toggle(self, db: Session, user_id: int, data: FavoriteToggle) -> dict:
         if data.fruit_id is not None and db.get(Fruit, data.fruit_id) is None:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Fruit not found")
+            raise NotFoundError("Fruit not found")
         if data.vegetable_id is not None and db.get(Vegetable, data.vegetable_id) is None:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Vegetable not found")
+            raise NotFoundError("Vegetable not found")
 
         existing = self.repo.find_by_user_and_item(
             db, user_id, data.vegetable_id, data.fruit_id

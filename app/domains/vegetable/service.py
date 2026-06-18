@@ -1,6 +1,6 @@
-from fastapi import HTTPException
 from sqlmodel import Session
 
+from app.core.exceptions import NotFoundError
 from app.core.pagination import PaginatedResult, paginate
 from app.domains.vegetable.repository import VegetableRepository
 from app.domains.vegetable.schemas import VegetableCreate, VegetableUpdate
@@ -22,7 +22,7 @@ class VegetableService:
     def get(self, db: Session, vegetable_id: int) -> Vegetable:
         veg = self.repo.get(db, vegetable_id)
         if not veg:
-            raise HTTPException(status_code=404, detail="Vegetable not found")
+            raise NotFoundError("Vegetable not found")
         return veg
 
     def create(self, db: Session, data: VegetableCreate) -> Vegetable:
@@ -32,9 +32,9 @@ class VegetableService:
     def update(self, db: Session, vegetable_id: int, data: VegetableUpdate) -> Vegetable:
         updated = self.repo.update(db, vegetable_id, data.model_dump(exclude_unset=True))
         if not updated:
-            raise HTTPException(status_code=404, detail="Vegetable not found")
+            raise NotFoundError("Vegetable not found")
         return updated
 
     def delete(self, db: Session, vegetable_id: int) -> None:
         if not self.repo.delete(db, vegetable_id):
-            raise HTTPException(status_code=404, detail="Vegetable not found")
+            raise NotFoundError("Vegetable not found")
