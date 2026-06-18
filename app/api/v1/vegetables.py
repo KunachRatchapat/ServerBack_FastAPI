@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.deps import AdminUserDep, SessionDep
 from app.core.response import created_response, success_response
-from app.domains.vegetable.schemas import VegetableCreate, VegetableUpdate
+from app.domains.vegetable.schemas import VegetableCreate, VegetableResponse, VegetableUpdate
 from app.domains.vegetable.service import VegetableService
 
 router = APIRouter(prefix="/vegetables", tags=["Vegetables"])
@@ -32,7 +32,7 @@ def list_vegetables(
 @router.get("/{vegetable_id}")
 def get_vegetable(db: SessionDep, service: VegetableServiceDep, vegetable_id: int):
     veg = service.get(db, vegetable_id)
-    return success_response(veg)
+    return success_response(VegetableResponse.model_validate(veg))
 
 
 @router.post("/", status_code=201)
@@ -43,7 +43,7 @@ def create_vegetable(
     data: VegetableCreate,
 ):
     veg = service.create(db, data)
-    return created_response(veg)
+    return created_response(VegetableResponse.model_validate(veg))
 
 
 @router.put("/{vegetable_id}")
@@ -55,7 +55,7 @@ def update_vegetable(
     data: VegetableUpdate,
 ):
     veg = service.update(db, vegetable_id, data)
-    return success_response(veg)
+    return success_response(VegetableResponse.model_validate(veg))
 
 
 @router.delete("/{vegetable_id}", status_code=204)
