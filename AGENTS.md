@@ -3,7 +3,7 @@
 ## Commands
 ```bash
 uvicorn app.main:app --reload              # dev server
-python -m pytest tests/ -v                # all tests (47 tests)
+python -m pytest tests/ -v                # all tests (69 tests)
 python -m pytest tests/test_auth.py -v    # single file
 python -m ruff check app/ tests/          # lint
 python -m mypy app/ tests/ --explicit-package-bases  # typecheck
@@ -19,6 +19,7 @@ python -m alembic revision --autogenerate -m "message"  # new migration
 - **Response envelope:** All endpoints return `{"code", "status", "message", "result"}` via `success_response()` / `created_response()` — never return raw models directly.
 - **Soft delete:** All models have `deleteat`/`createat`/`updateat` (lowercase, no underscores). `SQLModelRepository` auto-filters `WHERE deleteat IS NULL` on get/list, auto-sets `updateat` on update, and sets `deleteat` on delete (not hard delete).
 - **Auth:** JWT (15m access + 7d refresh), Argon2 password hashing via passlib. New users start with `is_verified=False` — login returns 403 until email verified.
+- **Custom exceptions:** Services raise `NotFoundError`, `UnauthorizedError`, `ForbiddenError`, `ConflictError`, `BadRequestError`, `ValidationError` from `app/core/exceptions.py` instead of raw `HTTPException`.
 
 ## Project Structure
 ```
@@ -26,9 +27,9 @@ app/main.py          # entry point (lifespan auto-migrates DB + loads ML)
 app/config.py        # pydantic-settings; SQLite in dev, Postgres in prod
 app/api/v1/          # 9 routers: fruits, vegetables, auth, admin, favorites, nutrition, prediction, search, upload
 app/core/            # shared: repository, response, security, storage, rate_limit, pagination, logging
-app/domains/         # 6 domains: auth, fruit, vegetable, favorite, admin, nutrition
+app/domains/         # 7 domains: auth, fruit, vegetable, favorite, admin, nutrition, search
 db/models/           # SQLModel tables: user, fruit, vegetable, favorite, nutrition
-tests/               # 47 tests in 9 files, file-based SQLite (test.db)
+tests/               # 69 tests in 10 files, file-based SQLite (test.db)
 ```
 
 ## Gotchas
@@ -39,6 +40,7 @@ tests/               # 47 tests in 9 files, file-based SQLite (test.db)
 - **Rate limiter** (slowapi, 60/min) only active when `ENV=production`.
 - **Argon2 is slow** — tests that seed users will run slower than usual.
 - **`SECRET_KEY` must be set in production** — default in `config.py` is empty. JWT signing will fail without it.
+- **Search domain pattern:** SearchRepository does NOT extend `SQLModelRepository` — it has custom query methods (`search_fruits`, `search_vegetables`). This is intentional because search crosses two tables.
 
 ## Legacy code (do not modify)
 - `repository/` — old repo pattern
