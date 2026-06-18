@@ -1,5 +1,3 @@
-
-
 def test_list_fruits_empty(client):
     r = client.get("/api/v1/fruits/")
     assert r.status_code == 200
