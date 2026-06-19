@@ -12,7 +12,7 @@ from sqlalchemy import text
 from app.api.v1.router import v1_router
 from app.config import settings
 from app.core.exceptions import global_exception_handler
-from app.core.logging_conf import RequestLogMiddleware, setup_logging
+from app.core.logging_conf import RequestLogMiddleware, logger, setup_logging
 from app.core.rate_limit import limiter
 from app.core.security_headers import SecurityHeadersMiddleware
 from app.database.engine import engine
@@ -66,7 +66,8 @@ def health():
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
             db_ok = True
-    except Exception:
+    except Exception as e:
+        logger.error("Health check: database connection failed: %s", e)
         db_ok = False
     return {
         "status": "ok" if db_ok else "degraded",

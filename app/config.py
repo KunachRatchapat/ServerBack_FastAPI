@@ -50,7 +50,11 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         if self.DB_URL:
             return self.DB_URL
-        if self.ENV == "development":
+        if (
+            self.ENV == "development"
+            and self.DB_HOST == "localhost"
+            and self.DB_NAME == "fastapi_db"
+        ):
             return "sqlite:///./dev.db"
         return (
             f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}"
